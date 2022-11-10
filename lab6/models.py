@@ -1,19 +1,15 @@
-from sqlalchemy import create_engine
 from sqlalchemy import Column, String, Integer, Date, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
 
-#
-
-engine = create_engine('mysql+pymysql://root:Busy18being@localhost/travelLab', echo=True)
 
 base = declarative_base()
 
 class City (base):
     __tablename__ = 'City'
     idcity = Column(Integer, primary_key=True)
-    name = Column(String(15))
-    country = Column(String(15))
+    name = Column(String(15), nullable=False)
+    country = Column(String(15), nullable=False)
 
     def __init__(self, idcity, name, country):
         self.idcity = idcity
@@ -23,11 +19,11 @@ class City (base):
 class User(base):
     __tablename__ = 'User'
     iduser = Column(Integer, primary_key=True)
-    name = Column(String(15))
-    surname = Column(String(15))
-    passport = Column(String(10))
-    username = Column(String(20))
-    password = Column(String(20))
+    name = Column(String(15), nullable=False)
+    surname = Column(String(15), nullable=False)
+    passport = Column(String(10), nullable=False)
+    username = Column(String(20), nullable=False)
+    password = Column(String(20), nullable=False)
 
 
     def __init__(self, iduser, name, surname, passport, username, password):
@@ -41,7 +37,7 @@ class User(base):
 class Transport(base):
     __tablename__ = 'Transport'
     idtransport = Column(Integer, primary_key=True)
-    name = Column(String(15))
+    name = Column(String(15), nullable=False)
 
 
     def __init__(self, idtransport, name):
@@ -51,9 +47,9 @@ class Transport(base):
 class Trip(base):
     __tablename__ = 'Trip'
     idtrip = Column(Integer, primary_key=True)
-    days = Column(Integer)
-    start_date = Column(Date)
-    transport_id = Column(Integer, ForeignKey(Transport.idtransport))
+    days = Column(Integer, nullable=False)
+    start_date = Column(Date, nullable=False)
+    transport_id = Column(Integer, ForeignKey(Transport.idtransport), nullable=False)
     transport = relationship('Transport', foreign_keys='Trip.transport_id')
 
     def __init__(self, idtrip, days, start_date, transport_id):
@@ -65,7 +61,7 @@ class Trip(base):
 class Hotel(base):
     __tablename__ = 'Hotel'
     idhotel = Column(Integer, primary_key=True)
-    name = Column(String(15))
+    name = Column(String(15), nullable=False)
 
     def __init__(self, idhotel, name):
         self.idhotel = idhotel
@@ -74,7 +70,7 @@ class Hotel(base):
 class Payment(base):
     __tablename__ = 'Payment'
     idpayment = Column(Integer, primary_key=True)
-    name = Column(String(15))
+    name = Column(String(15), nullable=False)
 
     def __init__(self, idpayment, name):
         self.idpayment = idpayment
@@ -84,9 +80,9 @@ class Payment(base):
 class Booking(base):
     __tablename__ = 'Booking'
     idbooking = Column(Integer, primary_key=True)
-    client_id = Column(Integer, ForeignKey(User.iduser))
-    trip_id = Column(Integer, ForeignKey(Trip.idtrip))
-    payment_id = Column(Integer, ForeignKey(Payment.idpayment))
+    client_id = Column(Integer, ForeignKey(User.iduser), nullable=False)
+    trip_id = Column(Integer, ForeignKey(Trip.idtrip), nullable=False)
+    payment_id = Column(Integer, ForeignKey(Payment.idpayment), nullable=False)
 
 
     client = relationship('User', foreign_keys='Booking.client_id')
@@ -103,8 +99,8 @@ class Booking(base):
 class Stop(base):
     __tablename__ = 'Stop'
     idstop = Column(Integer, primary_key=True)
-    trip_id = Column(Integer, ForeignKey(Trip.idtrip))
-    city_id = Column(Integer, ForeignKey(City.idcity))
+    trip_id = Column(Integer, ForeignKey(Trip.idtrip), nullable=False)
+    city_id = Column(Integer, ForeignKey(City.idcity), nullable=False)
 
     trip = relationship('Trip', foreign_keys='Stop.trip_id')
     city = relationship('City', foreign_keys='Stop.city_id')
@@ -119,8 +115,8 @@ class Stop(base):
 class HotelsChoice(base):
     __tablename__ = 'HotelsChoice'
     idchoice = Column(Integer, primary_key=True)
-    hotel_id = Column(Integer, ForeignKey(Hotel.idhotel))
-    city_id = Column(Integer, ForeignKey(City.idcity))
+    hotel_id = Column(Integer, ForeignKey(Hotel.idhotel), nullable=False)
+    city_id = Column(Integer, ForeignKey(City.idcity), nullable=False)
 
     hotel = relationship('Hotel', foreign_keys='HotelsChoice.hotel_id')
     city = relationship('City', foreign_keys='HotelsChoice.city_id')
@@ -131,5 +127,3 @@ class HotelsChoice(base):
         self.hotel_id = hotel_id
         self.city_id = city_id
 
-
-base.metadata.create_all(engine)

@@ -1,7 +1,8 @@
-from lab6.models import sessionmaker, City, User, Hotel, HotelsChoice
-import models
+from lab6.models import City, User, Hotel, HotelsChoice
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-Session = sessionmaker(bind=models.engine)
+Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travelLab', echo=True))
 session = Session()
 
 user1 = User(1, 'John', 'Brown', 'PG901234', 'jhnbrwn', 'qwerty123')
