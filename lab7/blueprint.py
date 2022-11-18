@@ -27,6 +27,8 @@ def city_():
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
         new_subject = db_utils.create_entry(models.City, **subject_data)
         return jsonify(schemas.CityReq().dump(new_subject))
 
@@ -71,6 +73,8 @@ def hotel_():
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
         new_city = db_utils.create_entry(models.Hotel, **city_data)
         return jsonify(schemas.HotelData().dump(new_city))
     if request.method == 'GET':
@@ -93,6 +97,8 @@ def hotel_byid(id):
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
             return err.messages, 422
         updated_city = db_utils.update_entry(city, **data)
         return schemas.HotelData().dump(updated_city)
@@ -120,6 +126,8 @@ def hotelschoice_():
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
             return err.messages, 422
         new_city = db_utils.create_entry(models.HotelsChoice, **city_data)
         return jsonify(schemas.HotelsChoiceData().dump(new_city))
@@ -163,6 +171,8 @@ def create_user():
             user_data = schemas.UserSchema().load(json_data)
         except ValidationError as err:
             return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
         user = session.query(models.User).filter_by(username=user_data["username"]).first()
         if user:
             return errors.exists
@@ -202,7 +212,9 @@ def user_username_api(username):
             return errors.bad_request
         try:
             data = schemas.UserSchema().load(json_data, partial=True)
-        except "ValidationError" as err:
+        except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
             return err.messages, 422
         for key, value in data.items():
             if key == "username":
@@ -217,4 +229,109 @@ def user_username_api(username):
     if request.method == 'DELETE':
         session.delete(user)
         session.commit()
+        return {"message": "Deleted successfully"}, 200
+
+### transport
+@api_blueprint.route("/transport", methods=["POST", "GET"])
+def transport_():
+    if request.method == 'POST':
+        json_data = request.json
+        if not json_data:
+            return errors.bad_request
+        try:
+            city_data = schemas.TransportData().load(json_data)
+        except (pymysql.Error, pymysql.Warning) as err:
+            return err.messages, 422
+        except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
+        new_city = db_utils.create_entry(models.Hotel, **city_data)
+        return jsonify(schemas.TransportData().dump(new_city))
+    if request.method == 'GET':
+        city_list = session.query(models.Transport).all()
+        return schemas.TransportData().dump(city_list, many=True), 200
+
+@api_blueprint.route('/transport/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def transport_byid(id):
+    city = session.query(models.Transport).filter_by(idtransport=id).first()
+    if not city:
+        return errors.not_found
+    if request.method == 'GET':
+        return jsonify(schemas.TransportData().dump(city))
+    if request.method == 'PUT':
+        json_data = request.json
+        if not json_data:
+            return db_utils.errors.bad_request
+        try:
+            data = schemas.TransportData().load(json_data, partial=True)
+        except (pymysql.Error, pymysql.Warning) as err:
+            return err.messages, 422
+        except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
+        updated_city = db_utils.update_entry(city, **data)
+        return schemas.TransportData().dump(updated_city)
+    if request.method == 'DELETE':
+        try:
+            session.delete(city)
+            session.commit()
+        except pymysql.err.IntegrityError:
+            session.rollback()  # rollback
+            return jsonify({"message": "foreign key constraint"}), 400  # just json return
+
+
+        return {"message": "Deleted successfully"}, 200
+
+### trip
+@api_blueprint.route("/trip", methods=["POST", "GET"])
+def trip_():
+    if request.method == 'POST':
+        json_data = request.json
+        if not json_data:
+            return errors.bad_request
+        try:
+            city_data = schemas.TripData().load(json_data)
+        except (pymysql.Error, pymysql.Warning) as err:
+            return err.messages, 422
+        except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
+        new_city = db_utils.create_entry(models.Trip, **city_data)
+        return jsonify(schemas.TripData().dump(new_city))
+    if request.method == 'GET':
+        city_list = session.query(models.Trip).all()
+        return schemas.TripData().dump(city_list, many=True), 200
+
+@api_blueprint.route('/trip/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def trip_byid(id):
+    city = session.query(models.Trip).filter_by(idtrip=id).first()
+    if not city:
+        return errors.not_found
+    if request.method == 'GET':
+        return jsonify(schemas.TripData().dump(city))
+    if request.method == 'PUT':
+        json_data = request.json
+        if not json_data:
+            return db_utils.errors.bad_request
+        try:
+            data = schemas.TripData().load(json_data, partial=True)
+        except (pymysql.Error, pymysql.Warning) as err:
+            return err.messages, 422
+        except ValidationError as err:
+            return err.messages, 422
+        except KeyError as err:
+            return err.messages, 422
+        updated_city = db_utils.update_entry(city, **data)
+        return schemas.TripData().dump(updated_city)
+    if request.method == 'DELETE':
+        try:
+            session.delete(city)
+            session.commit()
+        except pymysql.err.IntegrityError:
+            session.rollback()  # rollback
+            return jsonify({"message": "foreign key constraint"}), 400  # just json return
+
         return {"message": "Deleted successfully"}, 200

@@ -1,5 +1,4 @@
 from marshmallow import fields, Schema, validate
-from datetime import date
 from flask_bcrypt import generate_password_hash
 
 
@@ -16,6 +15,17 @@ class HotelData(Schema):
     idhotel = fields.Integer()
     name = fields.String()
 
+class TripData(Schema):
+    idtrip = fields.Integer()
+    name = fields.String()
+    days = fields.Integer()
+    start_date = fields.Date()
+    transport_id = fields.Integer()
+
+class TransportData(Schema):
+    idtransport = fields.Integer()
+    name = fields.String()
+
 class HotelsChoiceData(Schema):
     idchoice = fields.Integer()
     hotel_id = fields.Integer()
@@ -30,8 +40,6 @@ class UserData(Schema):
     surname = fields.String()
     username = fields.String()
     passport = fields.String()
-
-
 
 class UserSchema(Schema):
     iduser = fields.Integer()
