@@ -1,5 +1,9 @@
 openapi: 3.0.3
-
+#todo review documentation
+#todo change authorization names
+#todo import documentation from swagger edditor
+#todo fix errors in swagger
+#todo add missing path to swagger
 info:
   title: Travel Agency
   description: Travel around Europe without worrying about the details.

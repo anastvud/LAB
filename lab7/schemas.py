@@ -26,14 +26,24 @@ class TransportData(Schema):
     idtransport = fields.Integer()
     name = fields.String()
 
+class PaymentData(Schema):
+    idpayment = fields.Integer()
+    name = fields.String()
+
 class HotelsChoiceData(Schema):
     idchoice = fields.Integer()
     hotel_id = fields.Integer()
     city_id = fields.Integer()
 
-class HotelsChoiceReq(Schema):
-    hotel_id = fields.Integer()
-    city_id = fields.Integer()
+class BookingData(Schema):
+    idbooking = fields.Integer()
+    client_id = fields.Integer()
+    trip_id = fields.Integer()
+    payment_id = fields.Integer()
+
+# class HotelsChoiceReq(Schema):
+#     hotel_id = fields.Integer()
+#     city_id = fields.Integer()
 
 class UserData(Schema):
     name = fields.String()
@@ -44,9 +54,11 @@ class UserData(Schema):
 class UserSchema(Schema):
     iduser = fields.Integer()
     username = fields.String()
-    password = fields.Function(
-        deserialize=lambda obj: generate_password_hash(obj), load_only=True
-    )
+    password = fields.String()
     name = fields.String()
     surname = fields.String()
     passport = fields.String()
+
+class LoginSchema(Schema):
+    username = fields.String()
+    password = fields.String()
