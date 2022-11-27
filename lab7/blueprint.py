@@ -21,10 +21,7 @@ auth = HTTPBasicAuth()
 def verify_password(username, password):
     user = session.query(models.User).filter(models.User.username == username).first()
     return user and checkpw(bytes(password, 'utf-8'), bytes(user.password, 'utf-8'))
- # user = Session.query(User).filter(User.username == username).first()
- #    is_pass_valid = checkpw(bytes(user['password'], 'utf-8'), bytes(password, 'utf-8'))
- #    if is_pass_valid:
- #        return username
+
 
 def get_current_user() -> models.User:
     username = auth.current_user()
@@ -65,8 +62,6 @@ def city_():
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
-            return err.messages, 422
-        except KeyError as err:
             return err.messages, 422
         new_subject = db_utils.create_entry(models.City, **subject_data)
         return jsonify(schemas.CityReq().dump(new_subject))
@@ -123,8 +118,6 @@ def hotel_():
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
-        except KeyError as err:
-            return err.messages, 422
         new_city = db_utils.create_entry(models.Hotel, **city_data)
         return jsonify(schemas.HotelData().dump(new_city))
 
@@ -149,8 +142,6 @@ def hotel_byid(id):
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
-        except KeyError as err:
-            return err.messages, 422
         updated_city = db_utils.update_entry(city, **data)
         return schemas.HotelData().dump(updated_city)
     if request.method == 'DELETE':
@@ -172,7 +163,7 @@ def hotel_byid_(id):
     return jsonify(schemas.HotelData().dump(city))
 
 
-### hotels choices
+### hotels choice
 @api_blueprint.route("/hotelschoice", methods=["POST"])
 @auth.login_required(role="admin")
 def hotelschoice_():
@@ -185,8 +176,6 @@ def hotelschoice_():
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
-            return err.messages, 422
-        except KeyError as err:
             return err.messages, 422
         new_city = db_utils.create_entry(models.HotelsChoice, **city_data)
         return jsonify(schemas.HotelsChoiceData().dump(new_city))
@@ -237,8 +226,6 @@ def create_user():
         user_data = schemas.UserSchema().load(request_data)
     except ValidationError as err:
         return err.messages, 422
-    except KeyError as err:
-        return err.messages, 422
     except (pymysql.Error, pymysql.Warning) as err:
         return err.messages, 422
     user = session.query(models.User).filter_by(username=user_data["username"]).first()
@@ -255,16 +242,14 @@ def create_user():
     session.commit()
     return jsonify(schemas.UserData().dump(user))
 
-@api_blueprint.route("/user/login", methods=["GET"])
+@api_blueprint.route('/user/login', methods=['GET'])
 def login():
     json_data = request.json
     if not json_data:
         return errors.bad_request
     try:
-        us = schemas.LoginSchema().load(json_data, partial=True)
+        us = schemas.LoginSchema().load(json_data)
     except ValidationError as err:
-        return err.messages, 422
-    except KeyError as err:
         return err.messages, 422
     # if not request.form['username'] or not request.form['password']:
     #     return errors.no_auth
@@ -272,10 +257,11 @@ def login():
     if not user:
         return errors.not_found
     is_pass_valid = checkpw(bytes(us['password'], 'utf-8'), bytes(user.password, 'utf-8'))
+   # if 'username' in request.args and 'password' in request.args and is_pass_valid:
     if is_pass_valid:
         return {"message": "Successfully logged in"}, 200
     else:
-        return {'error': {'code': 400, 'message': 'Incorrect password'}}, 400
+        return errors.no_auth
 
 #todo rearrange path according to swagger
 
@@ -284,7 +270,7 @@ def login():
 def logout():
     return redirect(f"http://logout:logout@{request.host}{url_for('api.login')}")
 
-@api_blueprint.route("/users", methods=["GET"])
+@api_blueprint.route("/user", methods=["GET"])
 @auth.login_required(role="admin")
 def get_users():
     users_list = session.query(models.User).all()
@@ -309,8 +295,6 @@ def user_username_api(username):
         try:
             data = schemas.UserSchema().load(json_data, partial=True)
         except ValidationError as err:
-            return err.messages, 422
-        except KeyError as err:
             return err.messages, 422
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
@@ -348,8 +332,7 @@ def transport_():
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
-        except KeyError as err:
-            return err.messages, 422
+
         new_city = db_utils.create_entry(models.Transport, **city_data)
         return jsonify(schemas.TransportData().dump(new_city))
 
@@ -377,8 +360,6 @@ def transport_byid(id):
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
-        except KeyError as err:
-            return err.messages, 422
         updated_city = db_utils.update_entry(city, **data)
         return schemas.TransportData().dump(updated_city)
     if request.method == 'DELETE':
@@ -405,8 +386,6 @@ def trip_():
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
-            return err.messages, 422
-        except KeyError as err:
             return err.messages, 422
         new_city = db_utils.create_entry(models.Trip, **city_data)
         return jsonify(schemas.TripData().dump(new_city))
@@ -436,8 +415,6 @@ def trip_byid(id):
             return err.messages, 422
         except ValidationError as err:
             return err.messages, 422
-        except KeyError as err:
-            return err.messages, 422
         updated_city = db_utils.update_entry(city, **data)
         return schemas.TripData().dump(updated_city)
     if request.method == 'DELETE':
@@ -451,25 +428,29 @@ def trip_byid(id):
         return {"message": "Deleted successfully"}, 200
 
 # payment
-@api_blueprint.route("/payment", methods=["POST", "GET"])
+@api_blueprint.route("/payment", methods=["POST"])
+@auth.login_required(role="admin")
 def payment_():
-    if request.method == 'POST':
-        json_data = request.json
-        if not json_data:
-            return errors.bad_request
-        try:
-            city_data = schemas.PaymentData().load(json_data)
-        except (pymysql.Error, pymysql.Warning) as err:
-            return err.messages, 422
-        except ValidationError as err:
-            return err.messages, 422
-        new_city = db_utils.create_entry(models.Payment, **city_data)
-        return jsonify(schemas.PaymentData().dump(new_city))
-    if request.method == 'GET':
-        city_list = session.query(models.Payment).all()
-        return jsonify(schemas.PaymentData().dump(city_list, many=True)), 200
+    json_data = request.json
+    if not json_data:
+        return errors.bad_request
+    try:
+        city_data = schemas.PaymentData().load(json_data)
+    except (pymysql.Error, pymysql.Warning) as err:
+        return err.messages, 422
+    except ValidationError as err:
+        return err.messages, 422
+    new_city = db_utils.create_entry(models.Payment, **city_data)
+    return jsonify(schemas.PaymentData().dump(new_city))
+
+
+@api_blueprint.route("/payment", methods=["GET"])
+def payment__():
+    city_list = session.query(models.Payment).all()
+    return jsonify(schemas.PaymentData().dump(city_list, many=True)), 200
 
 @api_blueprint.route('/payment/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@auth.login_required(role="admin")
 def payment_byid(id):
     city = session.query(models.Payment).filter_by(idpayment=id).first()
     if not city:
@@ -485,8 +466,6 @@ def payment_byid(id):
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
-            return err.messages, 422
-        except KeyError as err:
             return err.messages, 422
         updated_city = db_utils.update_entry(city, **data)
         return jsonify(schemas.PaymentData().dump(updated_city))
@@ -512,8 +491,6 @@ def booking_():
         except (pymysql.Error, pymysql.Warning) as err:
             return err.messages, 422
         except ValidationError as err:
-            return err.messages, 422
-        except KeyError as err:
             return err.messages, 422
         new_city = db_utils.create_entry(models.Booking, **city_data)
         return jsonify(schemas.BookingData().dump(new_city))
