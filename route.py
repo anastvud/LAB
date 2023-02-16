@@ -1,10 +1,10 @@
 import pymysql
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
-from lab7 import db_utils
-from lab7.db_utils import errors
-from lab7 import schemas
-from lab6 import models
+import db_utils
+from db_utils import errors
+import schemas
+import models
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

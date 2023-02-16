@@ -16,7 +16,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from lab6.models import base
+from models import base
 target_metadata = base.metadata
 
 # other values from the config, defined by the needs of env.py,

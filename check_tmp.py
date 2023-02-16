@@ -1,4 +1,4 @@
-from lab6.models import City, User, Hotel, HotelsChoice
+from models import City, User, Hotel, HotelsChoice
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
