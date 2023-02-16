@@ -2,7 +2,7 @@ openapi: 3.0.3
 
 info:
   title: Travel Agency
-  description: Travel around Europe without worrying about the details.
+  description: Travel around Europe without worrying about the details
   version: 1.0.0
 servers:
   - url: http://localhost:5000/api/v1
@@ -21,11 +21,11 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/City'
+                $ref: '#/components/schemas/City'
         '400':
-          description: Invalid status value
+          description: Invalid ID supplied
+        '404':
+          description: City not found
         '405':
           description: Validation exception
     post:
@@ -34,96 +34,18 @@ paths:
       summary: Add an existing city
       operationId: addCity
       responses:
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: City not found
-        '405':
-          description: Validation exception
-      security:
-        - system_auth:
-            - 'write:city'
-      requestBody:
-        $ref: '#/components/requestBodies/CityRequest'
-  '/city/{idcity}':
-    get:
-      tags:
-        - City
-      summary: Find city by ID
-      description: Returns a single city
-      operationId: getCityById
-      parameters:
-        - name: idcity
-          in: path
-          description: ID of city to return
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/City'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/City'
         '400':
           description: Invalid ID supplied
         '404':
-          description: City not found
+          description: Hotel not found
         '405':
           description: Validation exception
-    put:
-      tags:
-        - City
-      summary: Update city
-      operationId: updateCity
-      parameters:
-        - name: idcity
-          in: path
-          description: ID of city that need to be updated
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '400':
-          description: Invalid city supplied
-        '404':
-          description: City not found
       security:
-        - system_auth:
-            - 'write:city'
+        - basicAuth: []
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/City'
-    delete:
-      tags:
-        - City
-      summary: Delete city
-      description: This can only be done by the logged in user.
-      operationId: deleteCity
-      parameters:
-        - name: idcity
-          in: path
-          description: The city that needs to be deleted
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '400':
-          description: Invalid city supplied
-        '404':
-          description: City not found
-      security:
-        - system_auth:
-            - 'write:city'
+        $ref: '#/components/requestBodies/CityRequest'
   '/city/{country}':
     get:
       tags:
@@ -153,28 +75,111 @@ paths:
           description: Country not found
         '405':
           description: Validation exception
-  
-  /user:
-    post:
+  '/city/{idcity}':
+    get:
       tags:
-        - user
-      summary: Create user
-      description: This can only be done by the logged in user.
-      operationId: createUser
+        - City
+      summary: Find city by ID
+      description: Returns a single city
+      operationId: getCityById
+      parameters:
+        - name: idcity
+          in: path
+          description: ID of city to return
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/City'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: City not found
+        '405':
+          description: Validation exception
+    put:
+      tags:
+        - City
+      summary: Update city
+      operationId: updateCity
+      parameters:
+        - name: idcity
+          in: path
+          description: ID of city that need to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid city supplied
+        '404':
+          description: City not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
-        description: Created user object
-        required: true
+              $ref: '#/components/schemas/CityReq'
+    delete:
+      tags:
+        - City
+      summary: Delete city
+      description: This can only be done by the logged in user.
+      operationId: deleteCity
+      parameters:
+        - name: idcity
+          in: path
+          description: The city that needs to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: City not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+
+  /user:
+    post:
+      tags:
+        - User
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '405':
+          description: Validation exception
+      requestBody:
+        $ref: '#/components/requestBodies/UserRequest'
   /user/login:
     get:
       tags:
-        - user
+        - User
       summary: Logs user into the system
       operationId: loginUser
       parameters:
@@ -192,44 +197,34 @@ paths:
             type: string
       responses:
         '200':
-          description: successful operation
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
-          content:
-            application/json:
-              schema:
-                type: string
-            application/xml:
-              schema:
-                type: string
+          description: Successful operation
         '400':
-          description: Invalid username/password supplied
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '405':
+          description: Validation exception
   /user/logout:
     get:
       tags:
-        - user
+        - User
       summary: Logs out current logged in user session
       operationId: logoutUser
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:user'
-            - 'read:user'
+        - basicAuth: []
   '/user/{username}':
     get:
       tags:
-        - user
+        - User
       summary: Get user by user name
       operationId: getUserByName
       parameters:
@@ -241,22 +236,23 @@ paths:
             type: string
       responses:
         '200':
-          description: successful operation
+          description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid username supplied
+          description: Invalid ID supplied
         '404':
           description: User not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'read:user'
-      
+        - basicAuth: []
+
     put:
       tags:
-        - user
+        - User
       summary: Updated user
       description: This can only be done by the logged in user.
       operationId: updateUser
@@ -268,24 +264,26 @@ paths:
           schema:
             type: string
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid user supplied
+          description: Invalid ID supplied
         '404':
           description: User not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:user'
-            - 'read:user'
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserReq'
         description: Updated user object
         required: true
     delete:
       tags:
-        - user
+        - User
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser
@@ -297,14 +295,16 @@ paths:
           schema:
             type: string
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid username supplied
+          description: Invalid ID supplied
         '404':
           description: User not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:user'
-            - 'read:user'
+        - basicAuth: []
   /trip:
     post:
       tags:
@@ -312,12 +312,16 @@ paths:
       summary: Add an existing Trip
       operationId: addTrip
       responses:
+        '200':
+          description: Successful operation
         '400':
           description: Invalid ID supplied
         '404':
           description: Trip not found
         '405':
           description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         $ref: '#/components/requestBodies/TripRequest'
   '/trip/{idtrip}':
@@ -341,9 +345,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Trip'          
-            application/xml:
-              schema:
                 $ref: '#/components/schemas/Trip'
         '400':
           description: Invalid ID supplied
@@ -351,7 +352,8 @@ paths:
           description: Trip not found
         '405':
           description: Validation exception
-          
+      security:
+        - basicAuth: []
     put:
       tags:
         - Trip
@@ -366,15 +368,21 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid trip supplied
+          description: Invalid ID supplied
         '404':
           description: Trip not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Trip'
+              $ref: '#/components/schemas/TripReq'
     delete:
       tags:
         - Trip
@@ -390,40 +398,66 @@ paths:
             type: integer
             format: int64
       responses:
-        '400':
-          description: Invalid trip supplied
-        '404':
-          description: Trip not found
-     
-  /transport:
-    post:
-      tags:
-        - Transport
-      summary: Add an existing Transport
-      operationId: addTransport
-      responses:
+        '200':
+          description: Successful operation
         '400':
           description: Invalid ID supplied
         '404':
-          description: Transport not found
+          description: Trip not found
         '405':
           description: Validation exception
       security:
-        - system_auth:
-            - 'write:transport'
-      requestBody:
-        $ref: '#/components/requestBodies/TransportRequest'
-  '/transport/{idtransport}':
+        - basicAuth: []
+
+  /place:
     get:
       tags:
-        - Transport
-      summary: Find transport by ID
-      description: Returns a single transport
-      operationId: getTransportById
+        - Place
+      summary: Print list of all available places
+      description: Print list of all available places
+      operationId: getPlaces
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Place'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: City not found
+        '405':
+          description: Validation exception
+    post:
+      tags:
+        - Place
+      summary: Add an existing Place
+      operationId: addPlace
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Place not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/PlaceRequest'
+  '/place/{city_id}':
+    get:
+      tags:
+        - Place
+      summary: Find places in a city
+      description: Returns an array of places
+      operationId: getPlacesByCity
       parameters:
-        - name: idtransport
+        - name: city_id
           in: path
-          description: ID of transport to return
+          description: Places of city to return
           required: true
           schema:
             type: integer
@@ -434,16 +468,120 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transport'          
-            application/xml:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Place'
+        '400':
+          description: Invalid Place name supplied
+        '404':
+          description: City not found
+        '405':
+          description: Validation exception
+  '/place/{idplace}':
+    get:
+      tags:
+        - Place
+      summary: Find Place by ID
+      description: Returns a Place
+      operationId: getPlaceById
+      parameters:
+        - name: idplace
+          in: path
+          description: ID of Place to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
               schema:
-                $ref: '#/components/schemas/Transport'
+                $ref: '#/components/schemas/Place'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Place not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+    put:
+      tags:
+        - Place
+      summary: Update Place
+      operationId: updatePlace
+      parameters:
+        - name: idplace
+          in: path
+          description: ID of Place that need to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Place not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceReq'
+    delete:
+      tags:
+        - Place
+      summary: Delete Place
+      description: This can only be done by the logged in user.
+      operationId: deletePlace
+      parameters:
+        - name: idplace
+          in: path
+          description: The trip that needs to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Place not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+
+  /transport:
+    post:
+      tags:
+        - Transport
+      summary: Add an existing Transport
+      operationId: addTransport
+      responses:
+        '200':
+          description: Successful operation
         '400':
           description: Invalid ID supplied
         '404':
           description: Transport not found
         '405':
-          description: Validation exception 
+          description: Validation exception
+      security:
+        - basicAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/TransportRequest'
+  '/transport/{idtransport}':
     put:
       tags:
         - Transport
@@ -458,18 +596,21 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid transport supplied
+          description: Invalid ID supplied
         '404':
           description: Transport not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:transport'
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transport'
+              $ref: '#/components/schemas/TransportReq'
     delete:
       tags:
         - Transport
@@ -485,35 +626,35 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid transport supplied
+          description: Invalid ID supplied
         '404':
           description: Transport not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:transport'
-  '/transport/{name}':
+        - basicAuth: []
     get:
       tags:
         - Transport
-      summary: Find transport by name
+      summary: Find transport by id
       description: Returns transport
       operationId: getTransportByName
       parameters:
-        - name: name
+        - name: idtransport
           in: path
           description: Transport to return
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Transport'          
-            application/xml:
               schema:
                 $ref: '#/components/schemas/Transport'
         '400':
@@ -522,7 +663,8 @@ paths:
           description: Transport not found
         '405':
           description: Validation exception
-      
+      security:
+        - basicAuth: []
   /hotel:
     post:
       tags:
@@ -530,15 +672,16 @@ paths:
       summary: Add an existing Hotel
       operationId: addHotel
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid ID supplied
+          description: Invalid transport name supplied
         '404':
           description: Hotel not found
         '405':
           description: Validation exception
       security:
-        - system_auth:
-            - 'write:hotel'
+        - basicAuth: []
       requestBody:
         $ref: '#/components/requestBodies/HotelRequest'
   '/hotel/{idhotel}':
@@ -562,16 +705,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Hotel'          
-            application/xml:
-              schema:
                 $ref: '#/components/schemas/Hotel'
         '400':
           description: Invalid ID supplied
         '404':
           description: Hotel not found
         '405':
-          description: Validation exception   
+          description: Validation exception
     put:
       tags:
         - Hotel
@@ -586,18 +726,21 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid hotel supplied
+          description: Invalid ID supplied
         '404':
           description: Hotel not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:hotel'
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Hotel'
+              $ref: '#/components/schemas/HotelReq'
     delete:
       tags:
         - Hotel
@@ -613,40 +756,119 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid hotel supplied
+          description: Invalid ID supplied
         '404':
           description: Hotel not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:hotel'
-  '/hotel/{name}':
+        - basicAuth: []
+
+  /payment:
+    post:
+      tags:
+        - Payment
+      summary: Add an existing Payment
+      operationId: addPayment
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid transport name supplied
+        '404':
+          description: Payment not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/PaymentRequest'
+  '/payment/{idpayment}':
     get:
       tags:
-        - Hotel
-      summary: Find hotel by name
-      description: Returns a hotel
-      operationId: getHotelByName
+        - Payment
+      summary: Find Payment by ID
+      description: Returns a Payment
+      operationId: getPaymentById
       parameters:
-        - name: name
+        - name: idpayment
           in: path
-          description: Hotel to return
+          description: ID of Payment to return
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Hotel'
+                $ref: '#/components/schemas/Payment'
         '400':
-          description: Invalid transport name supplied
+          description: Invalid ID supplied
         '404':
-          description: Hotel not found
+          description: Payment not found
         '405':
           description: Validation exception
+    put:
+      tags:
+        - Payment
+      summary: Update Payment
+      operationId: updatePayment
+      parameters:
+        - name: idpayment
+          in: path
+          description: ID of Payment that need to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Payment not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HotelReq'
+    delete:
+      tags:
+        - Payment
+      summary: Delete Payment
+      description: This can only be done by the logged in user.
+      operationId: deletePayment
+      parameters:
+        - name: idpayment
+          in: path
+          description: The Payment that needs to be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Payment not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
+
   '/hotelschoice/{idchoice}':
     get:
       tags:
@@ -689,18 +911,21 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid HotelsChoice supplied
+          description: Invalid ID supplied
         '404':
           description: HotelsChoice not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:hotelsChoice'
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HotelsChoice'
+              $ref: '#/components/schemas/HotelsChoiceReq'
     delete:
       tags:
         - HotelsChoice
@@ -716,13 +941,16 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid HotelsChoice supplied
+          description: Invalid ID supplied
         '404':
           description: HotelsChoice not found
+        '405':
+          description: Validation exception
       security:
-        - system_auth:
-            - 'write:hotelsChoice'
+        - basicAuth: []
   /hotelschoice:
     get:
       tags:
@@ -740,13 +968,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/HotelsChoice'
         '400':
-          description: Invalid status value
+          description: Invalid ID supplied
+        '404':
+          description: HotelsChoice not found
         '405':
           description: Validation exception
     post:
       tags:
         - HotelsChoice
-      summary: Add an existing HotelsChoice
+      summary: Add new HotelsChoice
       operationId: addHotelsChoice
       responses:
         '400':
@@ -756,8 +986,7 @@ paths:
         '405':
           description: Validation exception
       security:
-        - system_auth:
-            - 'write:hotelsChoice'
+        - basicAuth: []
       requestBody:
         $ref: '#/components/requestBodies/HotelsChoiceRequest'
   /stop:
@@ -777,21 +1006,29 @@ paths:
                 items:
                   $ref: '#/components/schemas/Stop'
         '400':
-          description: Invalid status value
+          description: Invalid ID supplied
+        '404':
+          description: Stop not found
         '405':
           description: Validation exception
+      security:
+        - basicAuth: []
     post:
       tags:
         - Stop
       summary: Add an existing Stop
       operationId: addStop
       responses:
+        '200':
+          description: Successful operation
         '400':
           description: Invalid ID supplied
         '404':
           description: Stop not found
         '405':
           description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         $ref: '#/components/requestBodies/StopRequest'
   '/stop/{idstop}':
@@ -819,9 +1056,11 @@ paths:
         '400':
           description: Invalid ID supplied
         '404':
-          description: Hotel not found
+          description: Stop not found
         '405':
-          description: Validation exception   
+          description: Validation exception
+      security:
+        - basicAuth: []
     put:
       tags:
         - Stop
@@ -836,15 +1075,22 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid Stop supplied
+          description: Invalid ID supplied
         '404':
           description: Stop not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Stop'
+              $ref: '#/components/schemas/StopReq'
+
     delete:
       tags:
         - Stop
@@ -860,10 +1106,16 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid Stop supplied
+          description: Invalid ID supplied
         '404':
-          description: Stop not found
+          description: Stop found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
 
   /booking:
     get:
@@ -882,9 +1134,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Booking'
         '400':
-          description: Invalid status value
+          description: Invalid ID supplied
+        '404':
+          description: Booking not found
         '405':
           description: Validation exception
+      security:
+        - basicAuth: []
     post:
       tags:
         - Booking
@@ -897,6 +1153,8 @@ paths:
           description: Booking not found
         '405':
           description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         $ref: '#/components/requestBodies/BookingRequest'
   '/booking/{idbooking}':
@@ -924,9 +1182,11 @@ paths:
         '400':
           description: Invalid ID supplied
         '404':
-          description: Hotel not found
+          description: Booking not found
         '405':
-          description: Validation exception   
+          description: Validation exception
+      security:
+        - basicAuth: []
     put:
       tags:
         - Booking
@@ -941,15 +1201,21 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid Booking supplied
+          description: Invalid ID supplied
         '404':
           description: Booking not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Booking'
+              $ref: '#/components/schemas/BookingReq'
     delete:
       tags:
         - Booking
@@ -965,10 +1231,16 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Successful operation
         '400':
-          description: Invalid Booking supplied
+          description: Invalid ID supplied
         '404':
           description: Booking not found
+        '405':
+          description: Validation exception
+      security:
+        - basicAuth: []
 
 components:
   schemas:
@@ -979,6 +1251,17 @@ components:
           type: integer
           format: int64
           example: 10
+        name:
+          type: string
+          example: London
+        country:
+          type: string
+          example: England
+      xml:
+        name: City
+    CityReq:
+      type: object
+      properties:
         name:
           type: string
           example: London
@@ -1000,12 +1283,33 @@ components:
         surname:
           type: string
           example: Brown
-        passport:
+        pasport:
           type: string
           example: PG902809
         username:
           type: string
-          example: Jack  
+          example: Jack
+        password:
+          type: string
+          example: jdskh89
+    UserReq:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Jack
+        surname:
+          type: string
+          example: Brown
+        pasport:
+          type: string
+          example: PG902809
+        username:
+          type: string
+          example: Jack
+        password:
+          type: string
+          example: PG902809
     Trip:
       type: object
       properties:
@@ -1025,6 +1329,63 @@ components:
           type: integer
           format: int64
           example: 12
+    TripReq:
+      type: object
+      properties:
+        days:
+          type: integer
+          format: int64
+          example: 7
+        start_date:
+          type: string
+          format: date
+          example: 2022-09-07
+        transport_id:
+          type: integer
+          format: int64
+          example: 12
+
+    Place:
+      type: object
+      properties:
+        idplace:
+          type: integer
+          format: int64
+          example: 42
+        name:
+          type: string
+          example: Key Gardens
+        price:
+          type: number
+          format: float
+          example: 25.5
+        rating:
+          type: number
+          format: float
+          example: 4.5
+        city_id:
+          type: integer
+          format: int64
+          example: 12
+    PlaceReq:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Key Gardens
+        price:
+          type: number
+          format: float
+          example: 25.5
+        rating:
+          type: number
+          format: float
+          example: 4.5
+        city_id:
+          type: integer
+          format: int64
+          example: 12
+
     Transport:
       type: object
       properties:
@@ -1032,6 +1393,12 @@ components:
           type: integer
           format: int64
           example: 49
+        name:
+          type: string
+          example: plane
+    TransportReq:
+      type: object
+      properties:
         name:
           type: string
           example: plane
@@ -1049,6 +1416,16 @@ components:
           type: integer
           format: int64
           example: 130
+    HotelReq:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Hilton
+        price:
+          type: integer
+          format: int64
+          example: 130
     HotelsChoice:
       type: object
       properties:
@@ -1056,6 +1433,17 @@ components:
           type: integer
           format: int64
           example: 49
+        hotel_id:
+          type: integer
+          format: int64
+          example: 21
+        city_id:
+          type: integer
+          format: int64
+          example: 67
+    HotelsChoiceReq:
+      type: object
+      properties:
         hotel_id:
           type: integer
           format: int64
@@ -1079,6 +1467,17 @@ components:
           type: integer
           format: int64
           example: 67
+    StopReq:
+      type: object
+      properties:
+        trip_id:
+          type: integer
+          format: int64
+          example: 21
+        city_id:
+          type: integer
+          format: int64
+          example: 67
     Payment:
       type: object
       properties:
@@ -1086,6 +1485,12 @@ components:
           type: integer
           format: int64
           example: 32
+        name:
+          type: string
+          example: cash
+    PaymentReq:
+      type: object
+      properties:
         name:
           type: string
           example: cash
@@ -1108,70 +1513,99 @@ components:
           type: integer
           format: int64
           example: 12
+    BookingReq:
+      type: object
+      properties:
+        trip_id:
+          type: integer
+          format: int64
+          example: 21
+        user_id:
+          type: integer
+          format: int64
+          example: 67
+        payment_id:
+          type: integer
+          format: int64
+          example: 12
   requestBodies:
     CityRequest:
       description: "Request for a City"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/City'
+          schema:
+            $ref: '#/components/schemas/CityReq'
+
+    PaymentRequest:
+      description: "Request for a Payment"
+      required: true
+      content:
+        applicaton/json:
+          schema:
+            $ref: '#/components/schemas/PaymentReq'
+
+    PlaceRequest:
+      description: "Request for a Place"
+      required: true
+      content:
+        applicaton/json:
+          schema:
+            $ref: '#/components/schemas/PlaceReq'
+
+    UserRequest:
+      description: "Request for a User"
+      required: true
+      content:
+        applicaton/json:
+          schema:
+            $ref: '#/components/schemas/UserReq'
     TripRequest:
       description: "Request for a Trip"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/Trip'
+          schema:
+            $ref: '#/components/schemas/TripReq'
     TransportRequest:
       description: "Request for a Transport"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/Transport'
+          schema:
+            $ref: '#/components/schemas/TransportReq'
     HotelRequest:
       description: "Request for a Hotel"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/Hotel'
+          schema:
+            $ref: '#/components/schemas/HotelReq'
     HotelsChoiceRequest:
       description: "Request for a HotelsChoice"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/HotelsChoice'
+          schema:
+            $ref: '#/components/schemas/HotelsChoiceReq'
     StopRequest:
       description: "Request for a Stop"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/Stop'
+          schema:
+            $ref: '#/components/schemas/StopReq'
     BookingRequest:
       description: "Request for a Booking"
       required: true
       content:
         applicaton/json:
-          schema: 
-            $ref: '#/components/schemas/Booking'
+          schema:
+            $ref: '#/components/schemas/BookingReq'
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    basicAuth:
       type: http
-      scheme: bearer
-      bearerFormat: JWT  # name of the header, query parameter or cookie
-    system_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
-          scopes:
-            write:city: modify city
-            write:user: modify user
-            read:user: read user
-            write:transport: modify transport
-            write:hotel: modify hotel
-            write:hotelsChoice: modify hotelsChoice
+      scheme: basic
+
+security:
+  - basicAuth: []
