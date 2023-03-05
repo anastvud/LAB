@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 api_blueprint = Blueprint('api', __name__)
 
-Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travelLab', echo=True))
+Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travel_agency', echo=True))
 session = Session()
 
 
