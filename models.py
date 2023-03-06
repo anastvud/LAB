@@ -14,8 +14,8 @@ class City (base):
     country = Column(String(15), nullable=False)
 
 class User(base):
-    __tablename__ = 'User'
-    iduser = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
+    __tablename__ = 'Client'
+    idclient = Column(Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     name = Column(String(25), nullable=False)
     surname = Column(String(25), nullable=False)
     email = Column(String(25), nullable=False, unique=True)
@@ -47,7 +47,7 @@ class Hotel(base):
     name = Column(String(15), nullable=False)
     rating = Column(Float, nullable=False)
     price = Column(Float, nullable=False)
-    breaksfast = Column(Boolean, nullable=False)
+    breakfast = Column(Boolean, nullable=False)
 
     city_id = Column(Integer, ForeignKey(City.idcity), nullable=False)
     city = relationship('City', foreign_keys='Hotel.city_id')
@@ -60,7 +60,7 @@ class Payment(base):
 class Booking(base):
     __tablename__ = 'Booking'
     idbooking = Column(Integer, primary_key=True, autoincrement=True)
-    client_id = Column(Integer, ForeignKey(User.iduser), nullable=False)
+    client_id = Column(Integer, ForeignKey(User.idclient), nullable=False)
     trip_id = Column(Integer, ForeignKey(Trip.idtrip), nullable=False)
     payment_id = Column(Integer, ForeignKey(Payment.idpayment), nullable=False)
 
