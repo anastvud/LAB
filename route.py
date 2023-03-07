@@ -10,51 +10,11 @@ from sqlalchemy.orm import sessionmaker
 
 api_blueprint = Blueprint('api', __name__)
 
-Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travelLab', echo=True))
+Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travel_agency', echo=True))
 session = Session()
 
 
-### city
-@api_blueprint.route("/city", methods=["POST", "GET"])
-def city_():
-    if request.method == 'POST':
-        json_data = request.json
-        if not json_data:
-            return errors.bad_request
-        try:
-            subject_data = schemas.CityData().load(json_data)
-        except (pymysql.Error, pymysql.Warning) as err:
-            return err.messages, 422
-        except ValidationError as err:
-            return err.messages, 422
-        new_subject = db_utils.create_entry(models.City, **subject_data)
-        return jsonify(schemas.CityReq().dump(new_subject))
 
-    if request.method == 'GET':
-        city_list = session.query(models.City).all()
-        return schemas.CityData().dump(city_list, many=True), 200
-
-@api_blueprint.route('/city/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def city_byid(id):
-    city = session.query(models.City).filter_by(idcity=id).first()
-    if not city:
-        return errors.not_found
-    if request.method == 'GET':
-        return jsonify(schemas.CityReq().dump(city))
-    if request.method == 'PUT':
-        json_data = request.json
-        if not json_data:
-            return db_utils.errors.bad_request
-        try:
-            data = schemas.CityReq().load(json_data, partial=True)
-        except ValidationError as error:
-            return error.messages, 422
-        updated_city = db_utils.update_entry(city, **data)
-        return schemas.CityReq().dump(updated_city)
-    if request.method == 'DELETE':
-        session.delete(city)
-        session.commit()
-        return {"message": "Deleted successfully"}, 200
 
 
 

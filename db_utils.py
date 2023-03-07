@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travelLab', echo=True))
+
+Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travel_agency', echo=True))
 session = Session()
 
 
@@ -29,3 +30,4 @@ class errors:
     bad_request = json_error('Invalid request', 400)
     val_exc = json_error('Validation exception', 405)
     exists = json_error('Forbidden. Already exists', 403)
+    success = json_error('Success', 200)
