@@ -31,7 +31,9 @@ class UserData(Schema):
     username = fields.String()
     passport = fields.String()
 
-
+class TransportData(Schema):
+    idtrasnport = fields.Integer()
+    name = fields.String()
 
 class UserSchema(Schema):
     iduser = fields.Integer()

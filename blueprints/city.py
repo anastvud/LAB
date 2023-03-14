@@ -1,4 +1,3 @@
-import pymysql
 from flask import jsonify, request, Blueprint
 from marshmallow import ValidationError
 

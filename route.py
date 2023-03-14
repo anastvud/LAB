@@ -61,7 +61,7 @@ def hotel_byid(id):
             session.delete(city)
             session.commit()
         except pymysql.err.IntegrityError:
-            session.rollback()  # rollback
+            session.rollback()
             return jsonify({"message": "foreign key constraint"}), 400  # just json return
 
 
