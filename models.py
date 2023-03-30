@@ -66,9 +66,11 @@ class Stop(base):
     idstop = Column(Integer, primary_key=True, autoincrement=True)
     trip_id = Column(Integer, ForeignKey(Trip.idtrip), nullable=False)
     city_id = Column(Integer, ForeignKey(City.idcity), nullable=False)
+    hotel_id = Column(Integer, ForeignKey(Hotel.idhotel))
 
     trip = relationship('Trip', foreign_keys='Stop.trip_id')
     city = relationship('City', foreign_keys='Stop.city_id')
+    hotel = relationship('Hotel', foreign_keys='Stop.hotel_id')
 
 class HotelsChoice(base):
     __tablename__ = 'HotelsChoice'

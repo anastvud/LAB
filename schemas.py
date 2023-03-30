@@ -24,6 +24,7 @@ class HotelsChoiceData(Schema):
     idchoice = fields.Integer()
     hotel_id = fields.Integer()
     city_id = fields.Integer()
+    trip_id = fields.Integer()
 
 class HotelsChoiceReq(Schema):
     hotel_id = fields.Integer()

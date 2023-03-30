@@ -8,6 +8,7 @@ from blueprints.trip import trip_blueprint
 from blueprints.hotel import hotel_blueprint
 from blueprints.booking import booking_blueprint
 from blueprints.stop import stop_blueprint
+from blueprints.hotelschoice import hotelschoice_blueprint
 
 
 app = Flask(__name__)
@@ -21,5 +22,6 @@ with make_server('', 5000, app) as server:
     app.register_blueprint(hotel_blueprint, url_prefix="/api/v1")
     app.register_blueprint(booking_blueprint, url_prefix="/api/v1")
     app.register_blueprint(stop_blueprint, url_prefix="/api/v1")
+    app.register_blueprint(hotelschoice_blueprint, url_prefix="/api/v1")
     print('working')
     server.serve_forever()
