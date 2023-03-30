@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Date, ForeignKey
+from sqlalchemy import Column, String, Integer, Date, ForeignKey, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -24,11 +24,13 @@ class Transport(base):
     __tablename__ = 'Transport'
     idtransport = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(15), nullable=False)
+    rating = Column(Float, nullable=False)
 
 class Trip(base):
     __tablename__ = 'Trip'
     idtrip = Column(Integer, primary_key=True, autoincrement=True)
     days = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=False)
     start_date = Column(Date, nullable=False)
     transport_id = Column(Integer, ForeignKey(Transport.idtransport), nullable=False)
     transport = relationship('Transport', foreign_keys='Trip.transport_id')

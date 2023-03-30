@@ -2,7 +2,7 @@ from models import City, User, Hotel, HotelsChoice
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travelLab', echo=True))
+Session = sessionmaker(bind=create_engine('mysql+pymysql://root:Busy18being@localhost/travel_agency', echo=True))
 session = Session()
 
 user1 = User(name='John', surname='Brown', passport='PG901234', username='jhnbrwn', password='qwerty123')

@@ -34,6 +34,17 @@ class UserData(Schema):
 class TransportData(Schema):
     idtrasnport = fields.Integer()
     name = fields.String()
+    rating = fields.Float()
+
+class TripData(Schema):
+    idtrip = fields.Integer()
+    days = fields.Integer()
+    price = fields.Integer()
+    date = fields.Date()
+    transport_id = fields.Integer()
+class PaymentData(Schema):
+    idpayment = fields.Integer()
+    name = fields.String()
 
 class UserSchema(Schema):
     iduser = fields.Integer()
