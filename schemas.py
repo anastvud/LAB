@@ -15,6 +15,10 @@ class CityReq(Schema):
 class HotelData(Schema):
     idhotel = fields.Integer()
     name = fields.String()
+    price = fields.Integer()
+    rating = fields.Float()
+    breakfast = fields.Integer()
+    city_id = fields.Integer()
 
 class HotelsChoiceData(Schema):
     idchoice = fields.Integer()

@@ -39,6 +39,11 @@ class Hotel(base):
     __tablename__ = 'Hotel'
     idhotel = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(15), nullable=False)
+    price = Column(Integer, nullable=False)
+    rating = Column(Float, nullable=False)
+    breakfast = Column(Integer, nullable=False)
+    city_id = Column(Integer, ForeignKey(City.idcity), nullable=False)
+    city = relationship('City', foreign_keys='Hotel.city_id')
 
 class Payment(base):
     __tablename__ = 'Payment'
