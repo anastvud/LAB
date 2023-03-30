@@ -50,6 +50,12 @@ class PaymentData(Schema):
     idpayment = fields.Integer()
     name = fields.String()
 
+class BookingData(Schema):
+    idbooking = fields.Integer()
+    client_id = fields.Integer()
+    trip_id = fields.Integer()
+    payment_id = fields.Integer()
+
 class UserSchema(Schema):
     iduser = fields.Integer()
     username = fields.String()

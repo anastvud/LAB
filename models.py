@@ -57,7 +57,6 @@ class Booking(base):
     trip_id = Column(Integer, ForeignKey(Trip.idtrip), nullable=False)
     payment_id = Column(Integer, ForeignKey(Payment.idpayment), nullable=False)
 
-
     client = relationship('User', foreign_keys='Booking.client_id')
     trip = relationship('Trip', foreign_keys='Booking.trip_id')
     payment = relationship('Payment', foreign_keys='Booking.payment_id')
