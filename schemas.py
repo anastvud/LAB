@@ -56,6 +56,11 @@ class BookingData(Schema):
     trip_id = fields.Integer()
     payment_id = fields.Integer()
 
+class StopData(Schema):
+    idstop = fields.Integer()
+    city_id = fields.Integer()
+    trip_id = fields.Integer()
+
 class UserSchema(Schema):
     iduser = fields.Integer()
     username = fields.String()
