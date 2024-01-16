@@ -4,10 +4,11 @@ import pymysql
 
 from db_utils import errors, create_entry, update_entry
 from schemas import TripData
-from models import Trip
+from models import Trip, Transport
 from db_utils import session
 
 trip_blueprint = Blueprint('trip', __name__)
+
 
 @trip_blueprint.route("/trip", methods=["POST", "GET"])
 def trip_():
@@ -22,12 +23,14 @@ def trip_():
         new_trip = create_entry(Trip, **trip_data)
         return jsonify(TripData().dump(new_trip))
     if request.method == 'GET':
-        trip_data = session.query(Trip).all()
+        trip_data = session.query(Trip.idtrip, Trip.days, Trip.price, Trip.start_date, Transport.name).outerjoin(
+            Transport).filter(Trip.transport_id == Transport.idtransport).order_by(Trip.idtrip).all()
         return TripData().dump(trip_data, many=True), 200
 
 @trip_blueprint.route('/trip/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def trip_by_id(id):
-    trip = session.query(Trip).filter_by(idtrip=id).first()
+    trip = session.query(Trip.idtrip, Trip.days, Trip.price, Trip.start_date, Transport.name).outerjoin(
+        Transport).filter(Trip.transport_id == Transport.idtransport).order_by(Trip.idtrip).filter_by(idtrip=id).first()
     if not trip:
         return errors.not_found
     if request.method == 'GET':
@@ -46,7 +49,7 @@ def trip_by_id(id):
         try:
             session.delete(trip)
             session.commit()
-            return {"message": "Deleted successfully"}, 200
+            return jsonify({"message": "Deleted successfully"}), 200
         except pymysql.err.IntegrityError:
             session.rollback()
-            return jsonify({"message": "foreign key constraint"}), 400  # just json return
+            return jsonify({"message": "foreign key constraint"}), 400

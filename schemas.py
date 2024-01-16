@@ -46,7 +46,7 @@ class TripData(Schema):
     days = fields.Integer()
     price = fields.Integer()
     date = fields.Date()
-    transport_id = fields.Integer()
+    name = fields.String()
 class PaymentData(Schema):
     idpayment = fields.Integer()
     name = fields.String()
