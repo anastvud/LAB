@@ -3,28 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>City List</title>
+    <title>City Information</title>
 {#    <link#}
 {#      rel="stylesheet"#}
 {#      type="text/css"#}
-{#      href="{{ url_for('static', filename='customerlist.css') }}"#}
+{#      href="{{ url_for('static', filename='customerdetails.css') }}"#}
 {#    />#}
   </head>
   <body>
-    <h1>City List</h1>
-    <table>
-{#      <thead>#}
-{#        <tr>#}
-{#          <th>ID ▾</th>#}
-{#          <th>Full Name ▾</th>#}
-{#          <th>Email ▾</th>#}
-{#          <th>Address ▾</th>#}
-{#          <th>Phone Number ▾</th>#}
-{#          <th>Delete</th>#}
-{#        </tr>#}
-{#      </thead>#}
-      <tbody>
-        {% for city in cities %}
+  <tbody>
+      <h1>Display City Details</h1>
         <tr>
           <td>
               <a href="{{ url_for('city.city_by_id', id=city.idcity) }}">
@@ -54,18 +42,14 @@
 {#            </form>#}
 {#          </td>#}
         </tr>
-        {% endfor %}
       </tbody>
-    </table>
-
-    <h1>Add New City</h1>
-    <form action="" method="post" class="inputform">
+    <h1>Edit City Details</h1>
+    <form method="post">
       <label for="name">Name:</label>
       <input
         type="text"
         id="name"
         name="name"
-        required
       />
 
       <label for="country">Country:</label>
@@ -73,7 +57,6 @@
         type="text"
         id="country"
         name="country"
-        required
       />
 
       <label for="year">Year of foundation:</label>
@@ -81,13 +64,9 @@
         type="number"
         id="year"
         name="year"
-        required
       />
-
-      <button type="submit">Add City</button>
+      <button type="submit">Update</button>
     </form>
-{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-{#    <script src="static/script.js"></script>#}
-{#    <script src="{{ url_for('static', filename='script_sorting.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='script.js') }}"></script>#}
   </body>
 </html>
