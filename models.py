@@ -10,6 +10,7 @@ class City (base):
     idcity = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(15), nullable=False)
     country = Column(String(15), nullable=False)
+    foundation_year = Column(Integer, nullable=False)
 
 class User(base):
     __tablename__ = 'User'

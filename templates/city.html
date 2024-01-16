@@ -1,0 +1,91 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>City List</title>
+{#    <link#}
+{#      rel="stylesheet"#}
+{#      type="text/css"#}
+{#      href="{{ url_for('static', filename='customerlist.css') }}"#}
+{#    />#}
+  </head>
+  <body>
+    <h1>City List</h1>
+    <table>
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>ID ▾</th>#}
+{#          <th>Full Name ▾</th>#}
+{#          <th>Email ▾</th>#}
+{#          <th>Address ▾</th>#}
+{#          <th>Phone Number ▾</th>#}
+{#          <th>Delete</th>#}
+{#        </tr>#}
+{#      </thead>#}
+      <tbody>
+        {% for city in cities %}
+        <tr>
+          <td>{{ city.idcity }}</td>
+{#          <td>#}
+{#            <a href="{{ url_for('customer_details', customer_id=city.CustomerID) }}">#}
+{#              {{ city.FirstName }} {{ city.LastName }}#}
+{#            </a>#}
+{#          </td>#}
+          <td>{{ city.name }}</td>
+          <td>{{ city.country }}</td>
+          <td>{{ city.foundation_year }}</td>
+{#          <td>#}
+{#            <form#}
+{#              action="{{ url_for('create') }}"#}
+{#              method="post"#}
+{#              style="display: inline"#}
+{#            >#}
+{#              <input#}
+{#                type="hidden"#}
+{#                name="delete_customer_id"#}
+{#                value="{{ city.CustomerID }}"#}
+{#              />#}
+{#              <button type="submit" class="standalone-button">Delete</button>#}
+{#            </form>#}
+{#          </td>#}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Add New City</h1>
+    <form action="" method="post" class="inputform">
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        required
+      />
+
+      <label for="country">Country:</label>
+      <input
+        type="text"
+        id="country"
+        name="country"
+        required
+      />
+
+      <label for="year">Year of foundation:</label>
+      <input
+        type="number"
+        id="year"
+        name="year"
+        required
+      />
+
+      <button type="submit">Add City</button>
+    </form>
+{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+{#    <script src="static/script.js"></script>#}
+{#    <script src="{{ url_for('static', filename='script_sorting.js') }}"></script>#}
+  </body>
+</html>

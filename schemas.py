@@ -7,6 +7,7 @@ class CityData(Schema):
     idcity = fields.Integer()
     name = fields.String()
     country = fields.String()
+    foundation_year = fields.Integer()
 
 class CityReq(Schema):
     name = fields.String()
