@@ -31,28 +31,23 @@
                 {{ city.idcity }}
               </a>
           </td>
-{#          <td>#}
-{#            <a href="{{ url_for('customer_details', customer_id=city.CustomerID) }}">#}
-{#              {{ city.FirstName }} {{ city.LastName }}#}
-{#            </a>#}
-{#          </td>#}
           <td>{{ city.name }}</td>
           <td>{{ city.country }}</td>
           <td>{{ city.foundation_year }}</td>
-{#          <td>#}
-{#            <form#}
-{#              action="{{ url_for('create') }}"#}
-{#              method="post"#}
-{#              style="display: inline"#}
-{#            >#}
-{#              <input#}
-{#                type="hidden"#}
-{#                name="delete_customer_id"#}
-{#                value="{{ city.CustomerID }}"#}
-{#              />#}
-{#              <button type="submit" class="standalone-button">Delete</button>#}
-{#            </form>#}
-{#          </td>#}
+          <td>
+            <form
+              action="{{ url_for('city.city_') }}"
+              method="post"
+              style="display: inline"
+            >
+              <input
+                type="hidden"
+                name="delete_id"
+                value="{{ city.idcity }}"
+              />
+              <button type="submit" class="standalone-button">Delete</button>
+            </form>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
