@@ -12,6 +12,19 @@ from db_utils import session
 city_blueprint = Blueprint("city", __name__)
 
 
+@city_blueprint.route("/start", methods=["POST", "GET"])
+def start():
+    return render_template("start.html")
+
+
+@city_blueprint.route("/query", methods=["POST", "GET"])
+def query():
+    result = session.execute(
+        "SELECT c.name as city, c.foundation_year, c.country, h.name as hotel, h.rating, h.price FROM city as c JOIN hotel as h ON h.city_id = c.idcity ORDER BY c.idcity;"
+    )
+    return render_template("query.html", result=result)
+
+
 @city_blueprint.route("/city", methods=["POST", "GET"])
 def city_():
     if request.method == "GET":
@@ -20,11 +33,15 @@ def city_():
         return render_template("city.html", cities=data)
 
     if request.method == "POST":
-        if 'delete_id' in request.form:
-            city = session.query(City).filter_by(idcity=int(request.form["delete_id"])).first()
+        if "delete_id" in request.form:
+            city = (
+                session.query(City)
+                .filter_by(idcity=int(request.form["delete_id"]))
+                .first()
+            )
             session.delete(city)
             session.commit()
-            return redirect(url_for('city.city_'))
+            return redirect(url_for("city.city_"))
         else:
             request_data = {
                 "name": request.form["name"],
@@ -40,7 +57,8 @@ def city_():
             except ValidationError as err:
                 return err.messages, 422
             create_entry(City, **subject_data)
-            return redirect(url_for('city.city_'))
+            return redirect(url_for("city.city_"))
+
 
 @city_blueprint.route("/city/<int:id>", methods=["GET", "POST", "DELETE"])
 def city_by_id(id):
