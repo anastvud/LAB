@@ -17,10 +17,10 @@ def start():
     return render_template("start.html")
 
 
-@city_blueprint.route("/query", methods=["POST", "GET"])
+@city_blueprint.route("/query", methods=["GET"])
 def query():
     result = session.execute(
-        "SELECT c.name as city, c.foundation_year, c.country, h.name as hotel, h.rating, h.price FROM city as c JOIN hotel as h ON h.city_id = c.idcity ORDER BY c.idcity;"
+        "SELECT c.idcity, c.name as city, c.foundation_year, c.country, GROUP_CONCAT(h.name ORDER BY h.name) as hotels, MAX(h.rating) as max_rating, MIN(h.price) as min_price FROM city as c JOIN hotel as h ON h.city_id = c.idcity GROUP BY c.idcity, c.name, c.foundation_year, c.country ORDER BY c.idcity;"
     )
     return render_template("query.html", result=result)
 

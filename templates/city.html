@@ -4,25 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>City List</title>
-{#    <link#}
-{#      rel="stylesheet"#}
-{#      type="text/css"#}
-{#      href="{{ url_for('static', filename='customerlist.css') }}"#}
-{#    />#}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap">
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='city.css') }}"
+    />
   </head>
   <body>
-    <h1>City List</h1>
+    <h2>City List</h2>
     <table>
-{#      <thead>#}
-{#        <tr>#}
-{#          <th>ID ▾</th>#}
-{#          <th>Full Name ▾</th>#}
-{#          <th>Email ▾</th>#}
-{#          <th>Address ▾</th>#}
-{#          <th>Phone Number ▾</th>#}
-{#          <th>Delete</th>#}
-{#        </tr>#}
-{#      </thead>#}
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Foundation Year</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
       <tbody>
         {% for city in cities %}
         <tr>
@@ -53,7 +54,7 @@
       </tbody>
     </table>
 
-    <h1>Add New City</h1>
+    <h2>Add New City</h2>
     <form action="" method="post" class="inputform">
       <label for="name">Name:</label>
       <input
@@ -81,8 +82,5 @@
 
       <button type="submit">Add City</button>
     </form>
-{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-{#    <script src="static/script.js"></script>#}
-{#    <script src="{{ url_for('static', filename='script_sorting.js') }}"></script>#}
   </body>
 </html>

@@ -4,46 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>City Information</title>
-{#    <link#}
-{#      rel="stylesheet"#}
-{#      type="text/css"#}
-{#      href="{{ url_for('static', filename='customerdetails.css') }}"#}
-{#    />#}
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap">
+
+      <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='city_id.css') }}"
+    />
   </head>
   <body>
-  <tbody>
-      <h1>Display City Details</h1>
+
+  <table>
+    <tbody>
+      <h2>Display City Details</h2>
         <tr>
           <td>
               <a href="{{ url_for('city.city_by_id', id=city.idcity) }}">
                 {{ city.idcity }}
               </a>
           </td>
-{#          <td>#}
-{#            <a href="{{ url_for('customer_details', customer_id=city.CustomerID) }}">#}
-{#              {{ city.FirstName }} {{ city.LastName }}#}
-{#            </a>#}
-{#          </td>#}
           <td>{{ city.name }}</td>
           <td>{{ city.country }}</td>
           <td>{{ city.foundation_year }}</td>
-{#          <td>#}
-{#            <form#}
-{#              action="{{ url_for('create') }}"#}
-{#              method="post"#}
-{#              style="display: inline"#}
-{#            >#}
-{#              <input#}
-{#                type="hidden"#}
-{#                name="delete_customer_id"#}
-{#                value="{{ city.CustomerID }}"#}
-{#              />#}
-{#              <button type="submit" class="standalone-button">Delete</button>#}
-{#            </form>#}
-{#          </td>#}
         </tr>
       </tbody>
-    <h1>Edit City Details</h1>
+    </table>
+
+    <h2>Edit City Details</h2>
     <form method="post">
       <label for="name">Name:</label>
       <input
@@ -67,6 +54,5 @@
       />
       <button type="submit">Update</button>
     </form>
-{#    <script src="{{ url_for('static', filename='script.js') }}"></script>#}
   </body>
 </html>

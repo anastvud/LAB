@@ -1,0 +1,74 @@
+/* Reset some default styles */
+body, h2, h2, table, th, td, form, input, button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif; /* Use Open Sans from Google Fonts */
+  background-color: white;
+  color: black;
+}
+
+h2 {
+  color: navy;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid gray;
+  padding: 8px;
+  text-align: left;
+}
+
+a {
+  color: navy;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.standalone-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.standalone-button:hover {
+  background-color: gray;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid gray;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: navy;
+}
+
+button {
+  background-color: navy;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: black;
+}

@@ -4,29 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Database Tables</title>
-{#    <link#}
-{#      rel="stylesheet"#}
-{#      type="text/css"#}
-{#      href="{{ url_for('static', filename='customerlist.css') }}"#}
-{#    />#}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap">
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='start.css') }}"
+    />
   </head>
   <body>
-    <h1>Tables List</h1>
-    <table>
-        <tbody>
-            <tr>
-                <td><a href="{{ url_for('city.city_') }}">
-                    city
-                </a></td>
-                <td><a href="{{ url_for('city.query') }}">
-                    simple query
-                </a></td>
-            </tr>
-        </tbody>
-    </table>
-
-{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-{#    <script src="static/script.js"></script>#}
-{#    <script src="{{ url_for('static', filename='script_sorting.js') }}"></script>#}
+    <h2>Tables List</h2>
+    <ul>
+      <li><a href="{{ url_for('city.city_') }}">city</a></li>
+      <li><a href="{{ url_for('city.query') }}">simple query</a></li>
+    </ul>
   </body>
 </html>
